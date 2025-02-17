@@ -1,15 +1,9 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
-require("dotenv").config();
+const User = require("../models/user"); // Modelo de usuario
+const JWT_SECRET = require("../config/jwtSecret"); // Clave segura
 
 const router = express.Router();
-
-// Generar JWT_SECRET si no existe
-if (!process.env.JWT_SECRET || process.env.JWT_SECRET.trim() === "") {
-  process.env.JWT_SECRET = require("crypto").randomBytes(64).toString("hex");
-  console.log("🔑 Se generó un nuevo JWT_SECRET automáticamente.");
-}
 
 router.post("/", async (req, res) => {
   const { telefono, contrasena } = req.body;
@@ -24,18 +18,16 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ error: "Contraseña incorrecta" });
     }
 
-    // Generar token con el secreto actual
+    // Generar el token con la clave persistente
     const token = jwt.sign(
       { id: user._id, telefono: user.telefono, rol: user.rol },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "2h" }
     );
 
-    console.log("🛠️ Token generado:", token); // 👀 Verifica si se genera un token válido
-
     res.json({ user, token });
   } catch (err) {
-    console.error("🔥 Error en el login:", err);
+    console.error(err);
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
