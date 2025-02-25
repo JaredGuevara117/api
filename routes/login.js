@@ -5,12 +5,6 @@ require("dotenv").config();
 
 const router = express.Router();
 
-// Generar JWT_SECRET si no existe
-if (!process.env.JWT_SECRET || process.env.JWT_SECRET.trim() === "") {
-  process.env.JWT_SECRET = require("crypto").randomBytes(64).toString("hex");
-  console.log("🔑 Se generó un nuevo JWT_SECRET automáticamente.");
-}
-
 router.post("/", async (req, res) => {
   const { telefono, contrasena } = req.body;
 
@@ -34,7 +28,7 @@ router.post("/", async (req, res) => {
     console.log("🛠️ Token generado:", token); // 👀 Verifica si se genera un token válido
 
     res.json({ user, token });
-  } catch (err) {
+  } catch (err) { 
     console.error("🔥 Error en el login:", err);
     res.status(500).json({ error: "Error en el servidor" });
   }
