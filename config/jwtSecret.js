@@ -1,12 +1,12 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user"); // Modelo de usuario
-const JWT_SECRET = require("../config/jwtSecret"); // Clave segura
+const User = require("../models/user"); 
+const JWT_SECRET = require("../config/jwtSecret"); 
 
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  const { telefono, contrasena } = req.body;
+  const { telefono, contrasena, rememberMe } = req.body; // Capturar el "recordar sesión"
 
   try {
     const user = await User.findOne({ telefono });
@@ -18,14 +18,23 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ error: "Contraseña incorrecta" });
     }
 
-    // Generar el token con la clave persistente
+    // Definir tiempos de expiración
+    const expiresInShort = "2h"; // Token normal (2 horas)
+    const expiresInLong = "7d"; // Token de sesión recordada (7 días)
+
+    // Token normal
     const token = jwt.sign(
       { id: user._id, telefono: user.telefono, rol: user.rol },
       JWT_SECRET,
-      { expiresIn: "2h" }
+      { expiresIn: expiresInShort }
     );
 
-    res.json({ user, token });
+    // Token de sesión guardada (si rememberMe es true)
+    const refreshToken = rememberMe 
+      ? jwt.sign({ id: user._id, telefono: user.telefono, rol: user.rol }, JWT_SECRET, { expiresIn: expiresInLong })
+      : null;
+
+    res.json({ user, token, refreshToken }); 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error en el servidor" });

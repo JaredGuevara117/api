@@ -7,7 +7,7 @@ const socketIo = require("socket.io");
 
 const { router: authRoutes, verifyToken, verifyRole } = require('./routes/auth');
 const User = require('./models/user'); // Asegúrate de importar el modelo de usuario
-
+const tokens = require('./models/tokens'); // Asegúrate de importar el modelo de token
 const app = express();
 const PORT = process.env.PORT || 4001;
 const server = http.createServer(app);
@@ -45,8 +45,9 @@ app.use('/login', login);
 
 // Rutas protegidas con token
 app.use('/multas', verifyToken, multas);
-app.use('/users', verifyToken, users);
+app.use('/users', users);
 app.use('/notificaciones', verifyToken, notificaciones);
+
 
 // Ejemplo de ruta solo para administradores
 app.get("/admin-data", verifyToken, verifyRole(["administrador"]), async (req, res) => {
