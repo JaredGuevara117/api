@@ -45,10 +45,16 @@ app.use('/login', login);
 
 // Rutas protegidas con token
 app.use('/multas', verifyToken, multas);
+<<<<<<< HEAD
 app.use('/users', users);
 app.use('/notificaciones', verifyToken, notificaciones);
 
 
+=======
+app.use('/users', verifyToken, users);
+app.use('/notificaciones', verifyToken, notificaciones);
+
+>>>>>>> 0f00895517c0cb19f514ec82b2f8003db463f112
 // Ejemplo de ruta solo para administradores
 app.get("/admin-data", verifyToken, verifyRole(["administrador"]), async (req, res) => {
   res.json({ mensaje: "Acceso autorizado para administradores" });
