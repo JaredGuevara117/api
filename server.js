@@ -24,6 +24,7 @@ const login = require('./routes/login');
 const multas = require('./routes/multas')(io);
 const users = require('./routes/users');
 const notificaciones = require('./routes/notifi');
+const recuperacion = require('./routes/recuperacion');
 
 console.log("Mongo URI:", process.env.MONGODB_URI);
 
@@ -42,7 +43,7 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use('/registro', registro);
 app.use('/login', login);
-
+app.use('/recuperacion', recuperacion);
 // Rutas protegidas con token
 app.use('/multas', verifyToken, multas);
 app.use('/users', users);
