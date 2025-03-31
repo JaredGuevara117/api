@@ -45,7 +45,7 @@ router.post('/solicitar-cambio', async (req, res) => {
       html: `
         <h1>Reestablece tu contraseña</h1>
         <p>Haz clic en el siguiente enlace para cambiar tu contraseña. Este enlace expirará en 5 minutos:</p>
-        <a href="http://localhost:5173/?token=${resetToken}">Cambiar contraseña</a>
+        <a href="https://condominio-jsw0nagd9-jaredguevara117s-projects.vercel.app/?token=${resetToken}">Cambiar contraseña</a>
       `,
     };
 
